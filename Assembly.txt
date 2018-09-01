@@ -1,0 +1,108 @@
+	NOP 							; không toán hạng , không làm gì cả
+	INC AX 							; 1 toán hạng, cộng 1 vào nội dung AX
+	DB 	giá_trị_khởi_tạo 		; định nghĩa byte
+	DW 	giá_trị_khởi_tạo			;định nghĩa word
+	DD								; định nghĩa từ kép
+	DQ								; định nghĩa 4word
+	DT 								; định nghĩa 10 byte
+	B_ARRAY DB 10h,20h,30h(1000,265,12)			;mảng
+	MOV 	đích,nguồn				; chuyển WORD1 vào AX
+	XCHG	đích,nguồn				; hoán đổi
+	ADD		đích,nguồn				; Cộng đích và nguồn (kq = nguồn)
+	SUB     đích,nguồn				; trừ nguồn từ đích	(kq = đích)	
+	INC     đích					; cộng thêm 1 vào đích
+	DEC     đích					; trừ đích 1 dv
+	NEG 	đích					; phủ định nội dung
+	IMul 							; Nhân
+	Idiv							; chia
+	Not		đích					; đảo ngược giá trị
+	And 	đích,nguồn				;thực hiện phép tính logic And trên từng cặp bit(kq = đích)
+	Xor     đích,nguồn				; so sánh(các cặp bít giống nhau thì đều = 0 )
+	IN      AL, <Địa chỉ cổng>  
+	OUT     <Địa chỉ cổng>, AL
+	=========================================
+	Cmp     Ax, Bx                  ; so sánh giá tị thanh ghi Ax với Bx
+	Jmp     <Vị trí đích>			;Lệnh nhảy không điều kiện
+	Lệnh JG:             Nhảy nếu [Đích] > [Nguồn] ; (SF = 0F và ZF = 0)
+	Lệnh JL:             Nhảy nếu [Đích] < [Nguồn] ; (SF <> 0F)
+	Lệnh JGE:          Nhảy nếu [Đích] ≥[Nguồn] ; (SF = 0F)
+	Lệnh JLE:           Nhảy nếu [Đích] ≤[Nguồn] ; (CF <> 0F và ZF = 1) 
+
+	Sau đây là các lệnh nhảy có điều kiện với dữ liệu không dấu:
+
+			Lệnh JA:            Nhảy nếu [Đích] > [Nguồn] ; (CF = 0 và ZF = 0)
+			Lệnh JB:              Nhảy nếu [Đích] < [Nguồn] ; (CF = 0)
+			Lệnh JNA:          Nhảy nếu [Đích] không lớn hơn [Nguồn]; (CF =1 or ZF =1)
+			Lệnh JNB:           Nhảy nếu [Đích] không nhỏ hơn [Nguồn] ; (CF = 0)
+	Sau đây là các lệnh nhảy có điều kiện dùng chung:
+
+			Lệnh JC:              Nhảy nếu cờ CF = 1
+			Lệnh JNC:           Nhảy nếu cờ CF = 0
+			Lệnh JZ:              Nhảy nếu cờ ZF = 1
+			Lệnh JNZ:           Nhảy nếu cờ ZF = 0
+			Lệnh JE:              Nhảy nếu [Đích] = [Nguồn]; Tương tự JZ; (ZF = 1)
+			Lệnh JNE:           Nhảy nếu [Đích] ≠[Nguồn]; Tương tự JNZ; (ZF = 0)
+======VD==================================
+
+	A = 5 - A   : 	MOV AX,5 ;đưa 5 vào AX			NEG A     ; A = -A
+				SUB AX,A ; AX chứa 5-A			ADD A,5   ; A= -A +5
+				MOV A,AX ;đưa nó vào A
+				
+============================================
+
+	.MODEL kiểu_bộ_nhớ
+
+		các kiểu bộ nhớ:
+				SMALL     	;Mã lệnh trong 1 đoạn. dữ liệu trong 1 đoạn
+			
+				MEDiUM		;Mã lệnh chiếm nhiều hơn 1 đoạn, dữ liệu trong 1 đoạn
+			
+				COMPACT     ;Mã lệnh trong 1 đoạn, dữ liệu chiếm nhiều hơn 1 mảng
+			
+				lARGE		; Mã lệnh chiếm nhiều hơn 1 đoạn, không mảng nào lớn hơn 64byte
+			
+				HUGE		;Mã lệnh chiếm nhiều hơn 1 đoạn, các mảng có thể lớn hơn 64bkbyte
+
+	.DATA 		;Đoạn dữ liệu
+
+	.STACK kích_thước 
+
+	.CODE Tên
+=================
+
+	INT số_hiệu_ngắt  ;ngắt chương trình
+	LEA đích,nguồn    ; hiển thị thông báo
+
+	PUSH ACC 		; Lưu giá trị của thanh ghi A vào đỉnh của ngăn xếp
+	hoặc
+	PUSH 00H ; Lưu giá trị của thanh ghi R0 vào đỉnh của ngăn xếp Con trỏ ngăn xếp SP sẽ được tăng lên 1.
+
+	POP ACC ; Lấy giá trị của đỉnh ngăn xếp gán cho thanh ghi A
+	hoặc 
+	POP 00H ; Lấy giá trị của đỉnh ngăn xếp gán cho thanh ghi R0 Con trỏ ngăn xếp sẽ bị giảm đi 1
+===================
+
+	SHR     dịch phải  MOV A, #8 SHL 1   
+				   MOV A, 10H
+
+	SHL     dịch trái
+
+	HIGH   byte cao
+
+	LOW    byte thâp
+
+	( )        được đánh giá trước		
+	EQ NE LT LE GT GE  =  <>  <=  >=
+
+	ASM51 cung cấp cho ta một vài loại chỉ dẫn sau :
+
+			Điều khiển trạng thái của trình dịch hợp ngữ ( ORG, END, USING )
+			Định nghĩa ký hiệu ( SEGMENT, EQU, SET, DATA, IDATA, XDATA, BIT, CODE )
+			Dành trước vùng nhớ / khởi động vùng nhớ (DS, DBIT, DB, DW)
+			Liên kết chương trình ( PUBLIC, EXTRN, NAME )
+			Lựa chọn segment ( RSEG, CSEG, DSEG, ISEG, BSEG, XSEG )
+
+
+			
+
+				
