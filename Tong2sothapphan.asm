@@ -1,13 +1,5 @@
 
 
-
-
-
-;inxau macro tbao
-;    lea dx,tbao
-;    mov ah,9
-;    int 21h
-;    endm 
 .Model Small
 .stack 100h
 .data
